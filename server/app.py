@@ -2,7 +2,7 @@
 from flask import Flask, request, render_template
 from flaskext.mysql import MySQL
 from datetime import datetime
-import settingsdb_gitignore
+import settings_gitignore
 
 app = Flask(__name__)
 
@@ -12,7 +12,7 @@ alarmActivated = False
 
 mysql = MySQL() 
 app.config['MYSQL_DATABASE_USER'] = 'homereset'
-app.config['MYSQL_DATABASE_PASSWORD'] = settingsdb_gitignore.MYSQL_DATABASE_PASSWORD
+app.config['MYSQL_DATABASE_PASSWORD'] = settings_gitignore.MYSQL_DATABASE_PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'homerest'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)

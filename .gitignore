@@ -1,5 +1,5 @@
 # Settings with passwords
-settingsdb_gitignore.py
+settings_gitignore.py
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
