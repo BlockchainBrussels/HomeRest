@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+ 
+<head>
+    <title>Python Flask Bucket List App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link href="https://getbootstrap.com/docs/3.3/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+</head>
+ 
+<body>
+    <script type="text/javascript">
+        $(function() {
+            $('#newThread').on('click', function (e) {
+                e.preventDefault(); // disable the default form submit event
+        
+                var $form = $('#replyForm');
+        
+                $.ajax({
+                    url: $form.attr("action"),
+                    type: $form.attr("method"),
+                    data: $form.serialize(),
+                    success: function (response) {
+                        alert('response received');
+                        // ajax success callback
+                    },
+                    error: function (response) {
+                        alert('ajax failed');
+                        // ajax error callback
+                    },
+                });
+            });
+        });
+    </script>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>ALARM {% if textArmed %} - {{ textArmed }} {% endif %}
+            </h1>
+            <p class="lead"></p>
+            <p>
+            <form name = "reply" id="replyForm" action="/action/enable" method = "POST">
+                <button id = "newThread" class="btn btn-primary" type="submit">Enable</button>
+            </form>
+            <form name = "reply" id="replyForm" action="/action/disable" method = "POST">
+                <button id = "newThread" class="btn btn-primary" type="submit">Disable</button>
+            </form>
+            </p>
+        </div>
+ 
+        <footer class="footer">
+            <p>&copy; Blockchain Brussels <script>document.write(new Date().getFullYear())</script></p>
+        </footer>
+ 
+    </div>
+</body>
+</html>
