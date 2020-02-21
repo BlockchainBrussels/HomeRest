@@ -26,6 +26,18 @@ def main():
 @app.route('/action/<action>', methods=['POST'])
 def action(action):
 
+    now = datetime.now()
+
+    _device = '0'
+    _event = action
+    _date = now.strftime("%Y-%m-%d %H:%M:%S")
+
+    cursor = mysql.get_db().cursor()
+    sql = "INSERT INTO events (device, event, date) VALUES (%s, %s, %s)"
+    val = (_device, _event, _date)
+    cursor.execute(sql, val)
+    mysql.get_db().commit()
+
     if action == 'disable':
         alarmActivated = False
         textArmed = "Disarmed"
@@ -41,7 +53,6 @@ def event():
 
     now = datetime.now()
 
-#    if request.method == 'POST':
     print("request.is_json: ",request.is_json)
     content = request.get_json()
 
@@ -59,9 +70,6 @@ def event():
     print(output)
     print('date: ', _date,'; device: ', _device,'; event: ', _event)
     return  output
-
-#    else:
-#        return render_template('index.html')
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0', port=5000)
