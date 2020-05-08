@@ -66,6 +66,7 @@ def action(action,device,rfid):
     #return render_template('index.html', textArmed=textArmed)
     return {'message': textArmed}
 
+
 @app.route('/event', methods=['POST'])
 def event():
 
