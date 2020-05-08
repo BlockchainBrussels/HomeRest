@@ -23,12 +23,22 @@ def main():
 
     return render_template('index.html')
 
-@app.route('/action/<action>', methods=['POST'])
-def action(action):
+@app.route('/status', methods=['GET'])
+def status():
 
+    if alarmActivated == True:
+        return "armed"
+    else:
+        return "disarmed"
+
+@app.route('/action/<action>/<device>', defaults={'rfid': None}, methods=['POST'])
+@app.route('/action/<action>/<device>/<rfid>', methods=['POST'])
+def action(action,device,rfid):
+
+    global alarmActivated
     now = datetime.now()
 
-    _device = '0'
+    _device = device
     _event = action
     _date = now.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -38,15 +48,23 @@ def action(action):
     cursor.execute(sql, val)
     mysql.get_db().commit()
 
-    if action == 'disable':
+    if action == "disable":
         alarmActivated = False
         textArmed = "Disarmed"
     elif action == "enable":
         alarmActivated = True
         textArmed = "Armed"
-    print("action: ",action.strip(),"; alarmActivated: ",alarmActivated)
+    elif action == "switch":
+        alarmActivated = not alarmActivated
+        if alarmActivated:
+            textArmed = "Armed"
+        else:
+            textArmed = "Disarmed"
+
+    print("status: ",action.strip(),"; alarmActivated: ",alarmActivated,"; device: ",device,"; rfid: ",rfid)
     
-    return render_template('index.html', textArmed=textArmed)
+    #return render_template('index.html', textArmed=textArmed)
+    return {'message': textArmed}
 
 @app.route('/event', methods=['POST'])
 def event():
