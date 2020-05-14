@@ -18,6 +18,21 @@ app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 conn = mysql.connect()
 
+# check if rfid is inside the rfidAlledList
+def checkRfid(list1, val): 
+      
+    # traverse in the list 
+    for x in list1: 
+        # compare with all the values 
+        # with val 
+        if val>= x: 
+            return False 
+    return True
+
+###########
+# routing #
+######### #
+
 @app.route('/', methods=['GET'])
 def main():
 
@@ -39,6 +54,7 @@ def action(action,device,rfid):
     now = datetime.now()
 
     _device = device
+    _rfid = rfid
     _event = action
     _date = now.strftime("%Y-%m-%d %H:%M:%S")
 
@@ -47,6 +63,11 @@ def action(action,device,rfid):
     val = (_device, _event, _date)
     cursor.execute(sql, val)
     mysql.get_db().commit()
+
+    if(checkRfid(settings_gitignore.rfidAllowedList, rfid)): 
+        print("RFID: Yes")
+    else: 
+        print("RFID: No")
 
     if action == "disable":
         alarmActivated = False
