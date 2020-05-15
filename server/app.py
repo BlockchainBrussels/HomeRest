@@ -21,22 +21,21 @@ conn = mysql.connect()
 # check if rfid is inside the rfidAlledList
 def checkRfid(list1, val): 
       
-    # traverse in the list 
-    for x in list1: 
-        # compare with all the values 
-        # with val 
-        if val>= x: 
-            return False 
-    return True
+    print(val,list1)
+    if val in list1: 
+            return True 
+    return False
 
-###########
-# routing #
-######### #
+
+###############
+### routing ###
+###############
 
 @app.route('/', methods=['GET'])
 def main():
 
     return render_template('index.html')
+
 
 @app.route('/status', methods=['GET'])
 def status():
@@ -46,45 +45,44 @@ def status():
     else:
         return "disarmed"
 
-@app.route('/action/<action>/<device>', defaults={'rfid': None}, methods=['POST'])
+
+#@app.route('/action/<action>/<device>', defaults={'rfid': None}, methods=['POST'])
 @app.route('/action/<action>/<device>/<rfid>', methods=['POST'])
 def action(action,device,rfid):
 
     global alarmActivated
     now = datetime.now()
 
+    if(checkRfid(settings_gitignore.rfidAllowedList, rfid)): 
+        print("RFID: OK!")
+
+        if action == "disable":
+            alarmActivated = False
+        elif action == "enable":
+            alarmActivated = True
+        elif action == "switch":
+            alarmActivated = not alarmActivated
+
+    else: 
+        print("RFID",rfid,": NOT allowed")
+        return {'message': "NotAllowed"}, 403
+    
+    if alarmActivated == True:
+        textArmed = "Armed"
+    else:
+        textArmed = "Disarmed"
+
     _device = device
-    _rfid = rfid
     _event = action
     _date = now.strftime("%Y-%m-%d %H:%M:%S")
-
     cursor = mysql.get_db().cursor()
     sql = "INSERT INTO events (device, event, date) VALUES (%s, %s, %s)"
     val = (_device, _event, _date)
     cursor.execute(sql, val)
     mysql.get_db().commit()
 
-    if(checkRfid(settings_gitignore.rfidAllowedList, rfid)): 
-        print("RFID: Yes")
-    else: 
-        print("RFID: No")
-
-    if action == "disable":
-        alarmActivated = False
-        textArmed = "Disarmed"
-    elif action == "enable":
-        alarmActivated = True
-        textArmed = "Armed"
-    elif action == "switch":
-        alarmActivated = not alarmActivated
-        if alarmActivated:
-            textArmed = "Armed"
-        else:
-            textArmed = "Disarmed"
-
     print("status: ",action.strip(),"; alarmActivated: ",alarmActivated,"; device: ",device,"; rfid: ",rfid)
-    
-    #return render_template('index.html', textArmed=textArmed)
+
     return {'message': textArmed}
 
 
