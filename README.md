@@ -1,4 +1,4 @@
-# Welcome to HomeRest!
+# Welcome to lightbo.lt!
 
 This Open Source project is created to handle a private home security project. The idea is to use cheap IOT devices with sensors as intrusion detection.
 
