@@ -37,6 +37,26 @@ def main():
     return render_template('index.html')
 
 
+@app.route('/ping/<device>', methods=['POST'])
+def ping(device):
+
+    _device = device
+    _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    _status = alarmActivated
+    cursor = mysql.get_db().cursor()
+    sql = "INSERT INTO ping (device, date, status) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE device=%s, date=%s, status=%s"
+    val = (_device, _date, _status, _device, _date, _status)
+    cursor.execute(sql, val)
+    mysql.get_db().commit()
+
+    if alarmActivated == True:
+        textArmed = "Armed"
+    else:
+        textArmed = "Disarmed"
+
+    return {'message': textArmed}
+
+
 @app.route('/status', methods=['GET'])
 def status():
 
@@ -46,7 +66,6 @@ def status():
         return "disarmed"
 
 
-#@app.route('/action/<action>/<device>', defaults={'rfid': None}, methods=['POST'])
 @app.route('/action/<action>/<device>/<rfid>', methods=['POST'])
 def action(action,device,rfid):
 
@@ -74,7 +93,7 @@ def action(action,device,rfid):
 
     _device = device
     _event = action
-    _date = now.strftime("%Y-%m-%d %H:%M:%S")
+    _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor = mysql.get_db().cursor()
     sql = "INSERT INTO events (device, event, date) VALUES (%s, %s, %s)"
     val = (_device, _event, _date)
@@ -89,15 +108,12 @@ def action(action,device,rfid):
 @app.route('/event', methods=['POST'])
 def event():
 
-    now = datetime.now()
-
-    print("request.is_json: ",request.is_json)
+    #print("request.is_json: ",request.is_json)
     content = request.get_json()
 
     _device = content['device']
     _event = content['event']
-    _date = now.strftime("%Y-%m-%d %H:%M:%S")
-
+    _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     cursor = mysql.get_db().cursor()
     sql = "INSERT INTO events (device, event, date) VALUES (%s, %s, %s)"
     val = (_device, _event, _date)
@@ -105,8 +121,7 @@ def event():
     mysql.get_db().commit()
 
     output = "{} record inserted.".format(cursor.rowcount)
-    print(output)
-    print('date: ', _date,'; device: ', _device,'; event: ', _event)
+    print(output, ' - date: ', _date,'; device: ', _device,'; event: ', _event)
     return  output
 
 if __name__ == '__main__':
