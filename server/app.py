@@ -26,6 +26,15 @@ def checkRfid(list1, val):
             return True 
     return False
 
+def insertEvent(_device, _event, _date, _status):
+
+    cursor = mysql.get_db().cursor()
+    sql = "INSERT INTO events (device, event, date, status) VALUES (%s, %s, %s, %s)"
+    val = (_device, _event, _date, _status)
+    cursor.execute(sql, val)
+    mysql.get_db().commit()
+
+    return format(cursor.rowcount)
 
 ###############
 ### routing ###
@@ -40,19 +49,19 @@ def main():
 @app.route('/ping/<device>', methods=['POST'])
 def ping(device):
 
+    if alarmActivated == True:
+        textArmed = "Armed"
+    else:
+        textArmed = "Disarmed"
+    
     _device = device
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    _status = alarmActivated
+    _status = textArmed
     cursor = mysql.get_db().cursor()
     sql = "INSERT INTO ping (device, date, status) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE device=%s, date=%s, status=%s"
     val = (_device, _date, _status, _device, _date, _status)
     cursor.execute(sql, val)
     mysql.get_db().commit()
-
-    if alarmActivated == True:
-        textArmed = "Armed"
-    else:
-        textArmed = "Disarmed"
 
     return {'message': textArmed}
 
@@ -91,14 +100,8 @@ def action(action,device,rfid):
     else:
         textArmed = "Disarmed"
 
-    _device = device
-    _event = action
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    cursor = mysql.get_db().cursor()
-    sql = "INSERT INTO events (device, event, date) VALUES (%s, %s, %s)"
-    val = (_device, _event, _date)
-    cursor.execute(sql, val)
-    mysql.get_db().commit()
+    insertEvent(device, action, _date, textArmed)
 
     print("status: ",action.strip(),"; alarmActivated: ",alarmActivated,"; device: ",device,"; rfid: ",rfid)
 
@@ -111,17 +114,15 @@ def event():
     #print("request.is_json: ",request.is_json)
     content = request.get_json()
 
-    _device = content['device']
-    _event = content['event']
-    _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    cursor = mysql.get_db().cursor()
-    sql = "INSERT INTO events (device, event, date) VALUES (%s, %s, %s)"
-    val = (_device, _event, _date)
-    cursor.execute(sql, val)
-    mysql.get_db().commit()
+    if alarmActivated == True:
+        textArmed = "Armed"
+    else:
+        textArmed = "Disarmed"
 
-    output = "{} record inserted.".format(cursor.rowcount)
-    print(output, ' - date: ', _date,'; device: ', _device,'; event: ', _event)
+    _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    output = "{} record inserted.".format(insertEvent(content['device'], content['event'], _date, textArmed))
+
+    print(output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'])
     return  output
 
 if __name__ == '__main__':
