@@ -79,7 +79,6 @@ def status():
 def action(action,device,rfid):
 
     global alarmActivated
-    now = datetime.now()
 
     if(checkRfid(settings_gitignore.rfidAllowedList, rfid)): 
         print("RFID: OK!")
