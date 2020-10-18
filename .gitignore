@@ -1,5 +1,8 @@
 # Settings with passwords
 settings_gitignore.py
+settings_gitignore.ino
+settings.json
+Lightbo_lt_security.h
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
