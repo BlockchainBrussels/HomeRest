@@ -11,16 +11,17 @@ Lightbo_lt lightbolt;
 
 int pirPin = 5; // PIR sensor is attached to D1 mini D1 pin which maps to pin 5 for arduino library
 int motion;
+int toPing = 0;
 
 void ICACHE_RAM_ATTR onTimerISR(){
-    Serial.println("Timer");
-    //lightbolt.ping();
+    //Serial.println("Timer");
+    toPing++;
 }
 
 void ICACHE_RAM_ATTR stateChange() //Interrupt function
 {
-    motion++; //motion = digitalRead(pirPin);
-    Serial.println("INTERRUPT: Motion.");
+    motion++;
+    //Serial.println("INTERRUPT: Motion.");
 }
 
 void setup() {
@@ -33,8 +34,8 @@ void setup() {
 
   attachInterrupt(digitalPinToInterrupt(pirPin), stateChange, RISING); // Sets the interrupt function, falling edge triggered interrupts.
 
-  //Initialize Ticker every 5s
-  timer1.attach(5, onTimerISR);
+  //Initialize Ticker "every 10s"
+  timer1.attach(10, onTimerISR);
 }
 
 void loop() {
@@ -44,12 +45,16 @@ void loop() {
       Serial.println("LOOP: Motion.");
       lightbolt.event("Infrared motion detected");
       delay(1000);
-      motion = 0;
       digitalWrite(2,HIGH); // LED OFF
     }
-    else
+
+    if (toPing > 0)
     {
-      delay(1000);
+      Serial.println("LOOP: Ping.");
+      lightbolt.ping();
     }
-    //lightbolt.ping();
+
+    delay(1000);
+    motion = 0;
+    toPing = 0;
 }

@@ -62,7 +62,7 @@ int Lightbo_lt::rfid(const char* rfid)
     HTTPClient httpRfid;
     httpRfid.begin(textForFullActionUrl); //Specify request destination
     int httpCode = httpRfid.POST("Switch!");
-    httpRfid.writeToStream(&Serial);
+    //httpRfid.writeToStream(&Serial);
     //String response = httpRfid.getString(); // TODO: getString takes 5 seconds !!!!!!!
     httpRfid.end();
     return httpCode;
