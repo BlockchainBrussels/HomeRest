@@ -2,7 +2,7 @@
 <html lang="en">
  
 <head>
-    <title>Dashboard HomeRest</title>
+    <title>Dashboard LIGHTBO.LT</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link href="https://getbootstrap.com/docs/3.3/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
@@ -43,7 +43,9 @@
     </script>
     <div class="container">
         <div class="jumbotron">
-            <h1>ALARM <div id="status"><i>unknown</i></div>  {% if textArmed %} - {{ textArmed }} {% endif %}</h1>
+            <h1 class="h1">ALARM</h1>
+            <h2 class="h2"><div class="text-danger"><div id="status"><i>unknown</i></div></div></h2>
+            <br>
             <div class="container">
                 <button class="btn btn-primary" onclick="home()">Home</button>
                 <button class="btn btn-primary" onclick="upstairs()">Upstairs</button>
