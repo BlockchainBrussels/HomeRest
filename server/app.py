@@ -1,6 +1,7 @@
 #!flask/bin/python
 from flask import Flask, request, render_template
 from flaskext.mysql import MySQL
+from flask_basicauth import BasicAuth
 from datetime import datetime
 import settings_gitignore
 
@@ -21,6 +22,14 @@ app.config['MYSQL_DATABASE_DB'] = 'homerest'
 app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 conn = mysql.connect()
+
+app.config['BASIC_AUTH_USERNAME'] = ''
+app.config['BASIC_AUTH_PASSWORD'] = 'matrix'
+basic_auth = BasicAuth(app)
+
+#################
+### functions ###
+#################
 
 # check if rfid is inside the rfidAlledList
 def checkRfid(list1, val): 
@@ -56,6 +65,7 @@ def insertPing(_device, _date, _status):
 ###############
 
 @app.route('/', methods=['GET'])
+@basic_auth.required
 def main():
 
     return render_template('index.html')
@@ -74,7 +84,6 @@ def ping(device):
 def status():
 
     return alarmActivated
-    #return "alarmActivated, 200
 
 
 @app.route('/action/<action>/<device>/<rfid>', methods=['POST'])
@@ -115,7 +124,12 @@ def event():
     output = "{} record inserted.".format(insertEvent(content['device'], content['event'], _date, alarmActivated))
 
     print(output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'])
-    return  output
+    return  output, 201
+
+
+############
+### main ###
+############
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0', port=5000)
