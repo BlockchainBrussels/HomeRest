@@ -13,40 +13,37 @@
     <script type="text/javascript">        
         function home(){
             jQuery.ajax({
-                url     : '/action/home/0/111',
+                url     : '/action/home/0/matrix',
                 type    : 'POST',
-                dataType: 'json',
                 success : function(data){
-                     $('#status').text(data.message);
+                     $('#status').text(data);
                 }
             });
         }
     
         function upstairs(){
              jQuery.ajax({
-                url     : '/action/upstairs/0/111',
+                url     : '/action/upstairs/0/matrix',
                 type    : 'POST',
-                dataType: 'json',
                 success : function(data){
-                     $('#status').text(data.message);
+                     $('#status').text(data);
                 }
             });
        }
 
         function away(){
              jQuery.ajax({
-                url     : '/action/away/0/111',
+                url     : '/action/away/0/matrix',
                 type    : 'POST',
-                dataType: 'json',
                 success : function(data){
-                     $('#status').text(data.message);
+                     $('#status').text(data);
                 }
             });
        }
     </script>
     <div class="container">
         <div class="jumbotron">
-            <h1>ALARM <span id="status">1111</span>  {% if textArmed %} - {{ textArmed }} {% endif %}</h1>
+            <h1>ALARM <div id="status"><i>unknown</i></div>  {% if textArmed %} - {{ textArmed }} {% endif %}</h1>
             <div class="container">
                 <button class="btn btn-primary" onclick="home()">Home</button>
                 <button class="btn btn-primary" onclick="upstairs()">Upstairs</button>

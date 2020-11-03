@@ -7,13 +7,14 @@ import settings_gitignore
 
 app = Flask(__name__)
 
-# alarmActivated = Home, is when you are Home, aka the system shouldn't be armed at all
-# alarmActivated = Upstairs, is when you go to bed for example, aka the system should be armed for your devices of "downstairs"
-# alarmActivated = Away, is when you are gone, aka the system should be armed for all your devices
+# alarmStatus = Home, is when you are Home, aka the system shouldn't be armed at all
+# alarmStatus = Upstairs, is when you go to bed for example, aka the system should be armed for your devices of "downstairs"
+# alarmStatus = Away, is when you are gone, aka the system should be armed for all your devices
 #
 #    default should be "Away", as it's the safest one in case of a reboot/restart
 #
-alarmActivated = "Away"
+alarmStatus = "Away"
+
 
 mysql = MySQL() 
 app.config['MYSQL_DATABASE_USER'] = 'homereset'
@@ -26,6 +27,7 @@ conn = mysql.connect()
 app.config['BASIC_AUTH_USERNAME'] = ''
 app.config['BASIC_AUTH_PASSWORD'] = 'matrix'
 basic_auth = BasicAuth(app)
+
 
 #################
 ### functions ###
@@ -75,43 +77,43 @@ def main():
 def ping(device):
 
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    insertPing(device, _date, alarmActivated)
+    insertPing(device, _date, alarmStatus)
 
-    return alarmActivated
+    return alarmStatus
 
 
 @app.route('/status', methods=['GET'])
 def status():
 
-    return alarmActivated
+    return alarmStatus
 
 
 @app.route('/action/<action>/<device>/<rfid>', methods=['POST'])
 def action(action,device,rfid):
     # action == home|upstairs|away
 
-    global alarmActivated
+    global alarmStatus
     
     if(checkRfid(settings_gitignore.rfidAllowedList, rfid)): 
         print("RFID: OK!")
 
         if action == "home":
-            alarmActivated = "Home"
+            alarmStatus = "Home"
         elif action == "upstairs":
-            alarmActivated = "Upstairs"
+            alarmStatus = "Upstairs"
         elif action == "away":
-            alarmActivated = "Away"
+            alarmStatus = "Away"
 
     else: 
         print("RFID",rfid,": NOT allowed")
         return {'message': "NotAllowed"}, 403
     
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    insertEvent(device, action, _date, alarmActivated)
+    insertEvent(device, action, _date, alarmStatus)
 
-    print("status: ",action.strip(),"; alarmActivated: ",alarmActivated,"; device: ",device,"; rfid: ",rfid)
+    print("status: ",action.strip(),"; alarmStatus: ",alarmStatus,"; device: ",device,"; rfid: ",rfid)
 
-    return alarmActivated
+    return alarmStatus, 201
 
 
 @app.route('/event', methods=['POST'])
@@ -121,7 +123,7 @@ def event():
     content = request.get_json()
 
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    output = "{} record inserted.".format(insertEvent(content['device'], content['event'], _date, alarmActivated))
+    output = "{} record inserted.".format(insertEvent(content['device'], content['event'], _date, alarmStatus))
 
     print(output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'])
     return  output, 201
