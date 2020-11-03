@@ -6,9 +6,13 @@ import settings_gitignore
 
 app = Flask(__name__)
 
-# alarmActivated = True when user activated the alarm in the UI
-# alarmActivated = False at start of app, or when user de-activated the alarm in the UI
-alarmActivated = False
+# alarmActivated = Home, is when you are Home, aka the system shouldn't be armed at all
+# alarmActivated = Upstairs, is when you go to bed for example, aka the system should be armed for your devices of "downstairs"
+# alarmActivated = Away, is when you are gone, aka the system should be armed for all your devices
+#
+#    default should be "Away", as it's the safest one in case of a reboot/restart
+#
+alarmActivated = "Away"
 
 mysql = MySQL() 
 app.config['MYSQL_DATABASE_USER'] = 'homereset'
@@ -36,6 +40,17 @@ def insertEvent(_device, _event, _date, _status):
 
     return format(cursor.rowcount)
 
+def insertPing(_device, _date, _status):
+
+    cursor = mysql.get_db().cursor()
+    sql = "INSERT INTO ping (device, date, status) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE device=%s, date=%s, status=%s"
+    val = (_device, _date, _status, _device, _date, _status)
+    cursor.execute(sql, val)
+    mysql.get_db().commit()
+
+    return format(cursor.rowcount)
+
+
 ###############
 ### routing ###
 ###############
@@ -49,69 +64,45 @@ def main():
 @app.route('/ping/<device>', methods=['POST'])
 def ping(device):
 
-    if alarmActivated == True:
-        textArmed = "Armed"
-    else:
-        textArmed = "Disarmed"
-    
-    _device = device
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    _status = textArmed
-    cursor = mysql.get_db().cursor()
-    sql = "INSERT INTO ping (device, date, status) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE device=%s, date=%s, status=%s"
-    val = (_device, _date, _status, _device, _date, _status)
-    cursor.execute(sql, val)
-    mysql.get_db().commit()
+    insertPing(device, _date, alarmActivated)
 
-    if alarmActivated == True:
-        return "armed"
-    else:
-        return "disarmed"
+    return alarmActivated
 
 
 @app.route('/status', methods=['GET'])
 def status():
 
-    if alarmActivated == True:
-        return "armed", 201
-    else:
-        return "disarmed", 200
+    return alarmActivated
+    #return "alarmActivated, 200
 
 
 @app.route('/action/<action>/<device>/<rfid>', methods=['POST'])
 def action(action,device,rfid):
+    # action == home|upstairs|away
 
     global alarmActivated
-    now = datetime.now()
-
+    
     if(checkRfid(settings_gitignore.rfidAllowedList, rfid)): 
         print("RFID: OK!")
 
-        if action == "disable":
-            alarmActivated = False
-        elif action == "enable":
-            alarmActivated = True
-        elif action == "switch":
-            alarmActivated = not alarmActivated
+        if action == "home":
+            alarmActivated = "Home"
+        elif action == "upstairs":
+            alarmActivated = "Upstairs"
+        elif action == "away":
+            alarmActivated = "Away"
 
     else: 
         print("RFID",rfid,": NOT allowed")
         return {'message': "NotAllowed"}, 403
     
-    if alarmActivated == True:
-        textArmed = "Armed"
-    else:
-        textArmed = "Disarmed"
-
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    insertEvent(device, action, _date, textArmed)
+    insertEvent(device, action, _date, alarmActivated)
 
     print("status: ",action.strip(),"; alarmActivated: ",alarmActivated,"; device: ",device,"; rfid: ",rfid)
 
-    if alarmActivated == True:
-        return "armed", 201
-    else:
-        return "disarmed", 200
+    return alarmActivated
 
 
 @app.route('/event', methods=['POST'])
@@ -120,13 +111,8 @@ def event():
     #print("request.is_json: ",request.is_json)
     content = request.get_json()
 
-    if alarmActivated == True:
-        textArmed = "Armed"
-    else:
-        textArmed = "Disarmed"
-
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    output = "{} record inserted.".format(insertEvent(content['device'], content['event'], _date, textArmed))
+    output = "{} record inserted.".format(insertEvent(content['device'], content['event'], _date, alarmActivated))
 
     print(output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'])
     return  output

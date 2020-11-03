@@ -11,9 +11,9 @@
  
 <body>
     <script type="text/javascript">        
-        function enable(){
+        function home(){
             jQuery.ajax({
-                url     : '/action/enable/0/111',
+                url     : '/action/home/0/111',
                 type    : 'POST',
                 dataType: 'json',
                 success : function(data){
@@ -22,9 +22,20 @@
             });
         }
     
-        function disable(){
+        function upstairs(){
              jQuery.ajax({
-                url     : '/action/disable/0/111',
+                url     : '/action/upstairs/0/111',
+                type    : 'POST',
+                dataType: 'json',
+                success : function(data){
+                     $('#status').text(data.message);
+                }
+            });
+       }
+
+        function away(){
+             jQuery.ajax({
+                url     : '/action/away/0/111',
                 type    : 'POST',
                 dataType: 'json',
                 success : function(data){
@@ -37,12 +48,9 @@
         <div class="jumbotron">
             <h1>ALARM <span id="status">1111</span>  {% if textArmed %} - {{ textArmed }} {% endif %}</h1>
             <div class="container">
-                <div class="text-left">
-                    <button class="btn btn-primary" onclick="enable()">Enable</button>
-                </div>
-                <div class="text-right">
-                    <button class="btn btn-primary" onclick="disable()">Disable</button>
-                </div>
+                <button class="btn btn-primary" onclick="home()">Home</button>
+                <button class="btn btn-primary" onclick="upstairs()">Upstairs</button>
+                <button class="btn btn-primary" onclick="away()">Away</button>
             </div>
         </div>
  
