@@ -63,16 +63,19 @@ def ping(device):
     cursor.execute(sql, val)
     mysql.get_db().commit()
 
-    return {'message': textArmed}
+    if alarmActivated == True:
+        return "armed"
+    else:
+        return "disarmed"
 
 
 @app.route('/status', methods=['GET'])
 def status():
 
     if alarmActivated == True:
-        return "armed"
+        return "armed", 201
     else:
-        return "disarmed"
+        return "disarmed", 200
 
 
 @app.route('/action/<action>/<device>/<rfid>', methods=['POST'])
@@ -104,7 +107,10 @@ def action(action,device,rfid):
 
     print("status: ",action.strip(),"; alarmActivated: ",alarmActivated,"; device: ",device,"; rfid: ",rfid)
 
-    return {'message': textArmed}
+    if alarmActivated == True:
+        return "armed", 201
+    else:
+        return "disarmed", 200
 
 
 @app.route('/event', methods=['POST'])
