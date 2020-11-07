@@ -29,5 +29,9 @@ Content of the LIGHTBO.LT project:
         1. RFID sensor RC522 (RFID reader to enable/disable the system)
         1. Microwave sensor HB100 (detect anything moving, be carefull for the waves ;-)
 
+
+Requirements: pip3 install flask-ext flask-mysql flask-basicauth
+
+
 LIGHTBO.LT has been started by Frederik Rousseau (@LinoxBE), who donates his effort to the project. Blockchain Brussels owns the copyrights and sponsors the project. The project is Open Source, feel to use and change it at will.
 Feel free to report bugs, log ideas, fire questions about anything related to the prject!
