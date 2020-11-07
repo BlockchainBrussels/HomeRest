@@ -14,10 +14,11 @@ The software backend has already many functionalities:
 1. An API to:
     1. Arm/disarm the system
     1. A ping for the IOT devices to detect physical deterioration
-    1. A log functionality to know everything that happened
+    1. A log functionality to know everything what happened
 
 Regarding IOT devices, Blockchain Brussels uses the WeMos D1 mini because it has integrated WiFi. There are multiple sensors that you can use to detect an intrusion, mainly infrared (HW-416 or HC-SR501) or wave detection (like the HB100 radar). There are many others that can be usefull but weren't tested (yet), for example laser beams.
 The WeMos D1 mini devices are powered by USB. You can use the cabling in the house foreseen for the sensors/consoles/etc to power with 5V the WeMos devices. Some soldering experience can be handsome in some cases ;-)
+The hardware is available at the webshop https://lightbo.lt, in case you have any question, just ask it!
 
 Content of the LIGHTBO.LT project:
 1. Find the server application in /server written in Python.
