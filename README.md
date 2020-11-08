@@ -44,7 +44,7 @@ Content of the LIGHTBO.LT project:
 
 pip3 install flask-ext flask-mysql flask-basicauth
 
-virtualenv -p python3 venv 
+In case you have another python version, please delete folder server/venv and create it again with ````virtualenv -p python3 venv````
 
 ## Sponsor(s) and creation
 
