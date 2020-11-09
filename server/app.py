@@ -4,6 +4,7 @@ from flaskext.mysql import MySQL
 from flask_basicauth import BasicAuth
 from datetime import datetime
 import settings_gitignore
+import os.path
 
 app = Flask(__name__)
 
@@ -15,11 +16,17 @@ app = Flask(__name__)
 #
 alarmStatus = "Away"
 
+
 mysql = MySQL() 
 app.config['MYSQL_DATABASE_USER'] = 'homereset'
 app.config['MYSQL_DATABASE_PASSWORD'] = settings_gitignore.MYSQL_DATABASE_PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'homerest'
-app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+if os.path.isfile('/.dockerenv'):
+    print ("Running in container!")
+    app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+else: # Not running in container
+    print ("NOT running in container!")
+    app.config['MYSQL_DATABASE_HOST'] = 'localhost'
 mysql.init_app(app)
 conn = mysql.connect()
 
