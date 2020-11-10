@@ -17,16 +17,17 @@ app = Flask(__name__)
 alarmStatus = "Away"
 
 mysql = MySQL() 
-app.config['MYSQL_DATABASE_USER'] = 'homereset'
 app.config['MYSQL_DATABASE_PASSWORD'] = settings_gitignore.MYSQL_DATABASE_PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'homerest'
 if os.path.isfile('/.dockerenv'):
     print ("Running in container!")
     app.config['MYSQL_DATABASE_HOST'] = 'lightbo.lt-mariadb'
+    app.config['MYSQL_DATABASE_USER'] = 'root'
     app.config['MYSQL_DATABASE_PASSWORD'] = 'querty'
 else: # Not running in container
     print ("NOT running in container!")
     app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+    app.config['MYSQL_DATABASE_USER'] = 'homereset'
 mysql.init_app(app)
 conn = mysql.connect()
 
