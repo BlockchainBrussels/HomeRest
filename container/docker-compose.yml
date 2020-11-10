@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+
+  lightbo.lt:
+    image: lightbo.lt:latest
+    container_name: lihtbo.lt-python
+    ports:
+      - 13000:3000
+    volumes:
+      - /var/www/docker-study.loc/recipe-03/php:/var/www/myapp
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:10.5
+    container_name: lightbo.lt-mariadb
+    restart: always
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: qwerty
+
+volumes:
+  mariadb-data:

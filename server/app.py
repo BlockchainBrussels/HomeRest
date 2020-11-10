@@ -23,7 +23,7 @@ app.config['MYSQL_DATABASE_PASSWORD'] = settings_gitignore.MYSQL_DATABASE_PASSWO
 app.config['MYSQL_DATABASE_DB'] = 'homerest'
 if os.path.isfile('/.dockerenv'):
     print ("Running in container!")
-    app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+    app.config['MYSQL_DATABASE_HOST'] = 'lightbo.lt-mariadb'
 else: # Not running in container
     print ("NOT running in container!")
     app.config['MYSQL_DATABASE_HOST'] = 'localhost'
