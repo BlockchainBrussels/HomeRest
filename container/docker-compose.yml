@@ -2,24 +2,24 @@ version: '3'
 
 services:
 
-  lightbo.lt:
+  lightbo.lt-base:
     image: lightbo.lt-base:latest
-    container_name: lihtbo.lt-python
+    container_name: lihtbo.lt-base
     ports:
       - 13000:3000
     networks:
       - lightbo.lt-network
     depends_on:
-      - mariadb
+      - lightbo.lt-db
 
-  mariadb:
+  lightbo.lt-db:
     image: lightbo.lt-db:latest
     container_name: lightbo.lt-db
     restart: always
     ports:
       - "13306:3306"
     volumes:
-      - mariadb-data:/var/lib/mysql
+      - lightbo.lt-db-data:/var/lib/mysql
     networks:
       - lightbo.lt-network
     environment:
@@ -30,7 +30,7 @@ services:
       MYSQL_DATABASE: 'homerest'
 
 volumes:
-  mariadb-data:
+  lightbo.lt-db-data:
 
 networks:
   lightbo.lt-network:

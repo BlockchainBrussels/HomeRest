@@ -21,7 +21,7 @@ app.config['MYSQL_DATABASE_PASSWORD'] = settings_gitignore.MYSQL_DATABASE_PASSWO
 app.config['MYSQL_DATABASE_DB'] = 'homerest'
 if os.path.isfile('/.dockerenv'):
     print ("Running in container!")
-    app.config['MYSQL_DATABASE_HOST'] = 'lightbo.lt-mariadb'
+    app.config['MYSQL_DATABASE_HOST'] = 'lightbo.lt-db'
     #app.config['MYSQL_DATABASE_PORT'] = 13306
     app.config['MYSQL_DATABASE_USER'] = 'homereset'
     app.config['MYSQL_DATABASE_PASSWORD'] = 'quertyhomerest'
