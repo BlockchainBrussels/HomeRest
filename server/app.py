@@ -23,6 +23,7 @@ app.config['MYSQL_DATABASE_DB'] = 'homerest'
 if os.path.isfile('/.dockerenv'):
     print ("Running in container!")
     app.config['MYSQL_DATABASE_HOST'] = 'lightbo.lt-mariadb'
+    app.config['MYSQL_DATABASE_PASSWORD'] = 'querty'
 else: # Not running in container
     print ("NOT running in container!")
     app.config['MYSQL_DATABASE_HOST'] = 'localhost'

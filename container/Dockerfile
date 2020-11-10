@@ -12,7 +12,8 @@ RUN cd /opt && \
     mv /opt/LIGHTBO.LT /opt/lightbo.lt && \
     chmod a+x /opt/lightbo.lt/container/create_files.sh && \
     /opt/lightbo.lt/container/create_files.sh && \
-    chown -R www-data.www-data /opt/lightbo.lt
+    chown -R www-data.www-data /opt/lightbo.lt && \
+    touch /tmp/aha
 #Change the working directory
 WORKDIR /opt/lightbo.lt/server
 #Run uwsgi with the configuration in the .ini file
@@ -22,5 +23,6 @@ CMD [ "uwsgi", "--socket", "0.0.0.0:3000", \
                "--gid", "www-data", \
                "--protocol", "uwsgi", \
                "--wsgi", "wsgi:application" ]
+
 #Expose port 90 of the container to the outside
 EXPOSE 3000
