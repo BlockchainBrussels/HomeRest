@@ -3,20 +3,18 @@ version: '3'
 services:
 
   lightbo.lt:
-    image: lightbo.lt:latest
+    image: lightbo.lt-base:latest
     container_name: lihtbo.lt-python
     ports:
       - 13000:3000
-    volumes:
-      - /var/www/docker-study.loc/recipe-03/php:/var/www/myapp
     networks:
       - lightbo.lt-network
     depends_on:
       - mariadb
 
   mariadb:
-    image: mariadb:10.5
-    container_name: lightbo.lt-mariadb
+    image: lightbo.lt-db:latest
+    container_name: lightbo.lt-db
     restart: always
     ports:
       - "13306:3306"

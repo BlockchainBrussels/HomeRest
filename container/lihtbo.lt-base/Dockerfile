@@ -10,8 +10,8 @@ RUN apt-get update && \
 RUN cd /opt && \
     git clone https://github.com/BlockchainBrussels/LIGHTBO.LT.git && \
     mv /opt/LIGHTBO.LT /opt/lightbo.lt && \
-    chmod a+x /opt/lightbo.lt/container/create_files.sh && \
-    /opt/lightbo.lt/container/create_files.sh && \
+    chmod a+x /opt/lightbo.lt/container/lightbo.lt-base/create_files.sh && \
+    /opt/lightbo.lt/container/lightbo.lt-base/create_files.sh && \
     chown -R www-data.www-data /opt/lightbo.lt && \
     touch /tmp/aha9
 #Change the working directory
