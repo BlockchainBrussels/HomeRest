@@ -13,7 +13,7 @@ RUN cd /opt && \
     chmod a+x /opt/lightbo.lt/container/create_files.sh && \
     /opt/lightbo.lt/container/create_files.sh && \
     chown -R www-data.www-data /opt/lightbo.lt && \
-    touch /tmp/aha6
+    touch /tmp/aha7
 #Change the working directory
 WORKDIR /opt/lightbo.lt/server
 #Run uwsgi with the configuration in the .ini file
