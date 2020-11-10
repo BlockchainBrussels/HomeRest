@@ -33,7 +33,7 @@ mysql.init_app(app)
 conn = mysql.connect()
 
 app.config['BASIC_AUTH_USERNAME'] = ''
-app.config['BASIC_AUTH_PASSWORD'] = 'matrix'
+app.config['BASIC_AUTH_PASSWORD'] = 'blahblahrfidkey'
 basic_auth = BasicAuth(app)
 
 

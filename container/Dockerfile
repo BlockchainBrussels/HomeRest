@@ -18,7 +18,7 @@ RUN cd /opt && \
 WORKDIR /opt/lightbo.lt/server
 #Run uwsgi with the configuration in the .ini file
 #CMD /usr/local/bin/uwsgi --emperor /opt/lightbo.lt/uwsgi/sites/ --uid=www-data --gid=www-data
-CMD [ "uwsgi", "--socket", "0.0.0.0:3000", \
+CMD [ "uwsgi", "--http", "0.0.0.0:3000", \
                "--uid", "www-data", \
                "--gid", "www-data", \
                "--protocol", "uwsgi", \
