@@ -9,6 +9,8 @@ services:
       - 13000:3000
     volumes:
       - /var/www/docker-study.loc/recipe-03/php:/var/www/myapp
+    networks:
+      - lightbo.lt-network
     depends_on:
       - mariadb
 
@@ -16,10 +18,21 @@ services:
     image: mariadb:10.5
     container_name: lightbo.lt-mariadb
     restart: always
+    ports:
+      - "13306:3306"
     volumes:
       - mariadb-data:/var/lib/mysql
+    networks:
+      - lightbo.lt-network
     environment:
-      MYSQL_ROOT_PASSWORD: qwerty
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_ROOT_PASSWORD: 'homereset'
+      MYSQL_USER: 'homereset'
+      MYSQL_PASSWORD: 'quertyhomerest'
+      MYSQL_DATABASE: 'homerest'
 
 volumes:
   mariadb-data:
+
+networks:
+  lightbo.lt-network:
