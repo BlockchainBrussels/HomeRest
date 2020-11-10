@@ -16,7 +16,6 @@ app = Flask(__name__)
 #
 alarmStatus = "Away"
 
-
 mysql = MySQL() 
 app.config['MYSQL_DATABASE_USER'] = 'homereset'
 app.config['MYSQL_DATABASE_PASSWORD'] = settings_gitignore.MYSQL_DATABASE_PASSWORD
