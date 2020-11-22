@@ -41,9 +41,10 @@ void Lightbo_lt::event(const char* message)
     char textToPost[100] = "{\"device\":\""; strcat(textToPost,WiFi.localIP().toString().c_str()); strcat(textToPost,"\",\"event\":\""); strcat(textToPost,message); strcat(textToPost,"\"}");
     Serial.print(_serverUrlEvent); Serial.print(" - "); Serial.println(textToPost);
     _httpEvent.POST(textToPost);
-    _httpEvent.writeToStream(&Serial);
+    //_httpEvent.writeToStream(&Serial);
     //Serial.println(_httpEvent.getString()); //Print request response payload
     _httpEvent.end();
+    Serial.println("");
 }
 
 void Lightbo_lt::ping()
@@ -51,9 +52,10 @@ void Lightbo_lt::ping()
     //Serial.print("Ping "); Serial.print(_serverUrlPing.c_str()); Serial.print(" : "); 
     _httpPing.begin(_serverUrlPing.c_str()); //Specify request destination
     _httpPing.POST("Hello!");
-    _httpPing.writeToStream(&Serial);
+    //_httpPing.writeToStream(&Serial);
     //Serial.println(_httpPing.getString()); //Print request response payload
     _httpPing.end();
+    Serial.println("");
 }
 
 int Lightbo_lt::rfid(const char* rfid)
@@ -62,13 +64,9 @@ int Lightbo_lt::rfid(const char* rfid)
     HTTPClient httpRfid;
     httpRfid.begin(textForFullActionUrl); //Specify request destination
     int httpCode = httpRfid.POST("Switch!");
-    //httpRfid.writeToStream(&Serial);
     //String response = httpRfid.getString(); // TODO: getString takes 5 seconds !!!!!!!
     httpRfid.end();
     return httpCode;
-    //Serial.println("END");
-    //WiFiClient client;
-    //client.print(String("GET ") + String("/action/switch/") + WiFi.localIP().toString() + " HTTP/1.1\r\n" + "Host: 192.168.1.7" + "\r\n" + "Connection: close\r\n\r\n");
 }
 
 int Lightbo_lt::getStatus()
