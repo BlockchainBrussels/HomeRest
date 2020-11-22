@@ -32,8 +32,8 @@ void loop(void) {
   handleRFID();
 
   // Status (http response code): 201==armed, 200=disarmed
-  int status = lightbolt.getStatus(linkStatus);
-  //Serial.print("Status: "); Serial.println(status);
+  int status = lightbolt.getStatus();
+  Serial.print("Status: "); Serial.println(status);
   if( status == 201 )
       digitalWrite(2,LOW); // LED ON
   else
