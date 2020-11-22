@@ -44,7 +44,7 @@ basic_auth = BasicAuth(app)
 # check if rfid is inside the rfidAlledList
 def checkRfid(list1, val): 
       
-    print(val,list1)
+    #print(val,list1)
     if val in list1: 
             return True 
     return False
@@ -93,27 +93,35 @@ def ping(device):
 @app.route('/status', methods=['GET'])
 def status():
 
-    return alarmStatus
+    if alarmStatus == "Home":
+        return alarmStatus, 200
+    else:
+        return alarmStatus, 201
 
 
 @app.route('/action/<action>/<device>/<rfid>', methods=['POST'])
 def action(action,device,rfid):
     # action == home|upstairs|away
+    # action == switch == (home<->away)
 
     global alarmStatus
     
     if(checkRfid(settings_gitignore.rfidAllowedList, rfid)): 
-        print("RFID: OK!")
-
+        #print("RFID: OK!")
         if action == "home":
             alarmStatus = "Home"
         elif action == "upstairs":
             alarmStatus = "Upstairs"
         elif action == "away":
             alarmStatus = "Away"
+        elif action == "switch":
+            if alarmStatus == "Home":
+                alarmStatus = "Away"
+            else:
+                alarmStatus = "Home"
 
     else: 
-        print("RFID",rfid,": NOT allowed")
+        print("RFID ",rfid,": NOT allowed")
         return {'message': "NotAllowed"}, 403
     
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
