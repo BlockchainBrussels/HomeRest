@@ -11,6 +11,12 @@
  
 <body>
     <script type="text/javascript">        
+        $.get( "/status", function( data ) {
+            //console.log( typeof data ); // string
+            //console.log( data ); // HTML content of the jQuery.ajax page
+            $('#status').text(data);
+        });
+        
         function home(){
             jQuery.ajax({
                 url     : '/action/home/0/blahblahrfidkey',

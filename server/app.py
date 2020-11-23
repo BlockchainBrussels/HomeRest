@@ -8,13 +8,14 @@ import os.path
 
 app = Flask(__name__)
 
+
 # alarmStatus = Home, is when you are Home, aka the system shouldn't be armed at all
 # alarmStatus = Upstairs, is when you go to bed for example, aka the system should be armed for your devices of "downstairs"
 # alarmStatus = Away, is when you are gone, aka the system should be armed for all your devices
 #
 #    default should be "Away", as it's the safest one in case of a reboot/restart
 #
-alarmStatus = "Away"
+alarmStatus = "Home"
 
 mysql = MySQL() 
 app.config['MYSQL_DATABASE_PASSWORD'] = settings_gitignore.MYSQL_DATABASE_PASSWORD
