@@ -6,7 +6,7 @@ services:
     image: linoxbe/lightbo.lt-app:latest
     container_name: lihtbo.lt-app
     ports:
-      - 13000:3000
+      - 3000:3000
     networks:
       - lightbo.lt-network
     depends_on:
