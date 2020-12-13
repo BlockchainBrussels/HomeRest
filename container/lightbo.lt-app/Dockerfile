@@ -9,7 +9,8 @@ RUN cd /opt && \
     mkdir -p /var/log/uwsgi/ && \
     mkdir -p /run/uwsgi/ && \
     chown www-data.www-data /var/log/uwsgi/ && \
-    chown www-data.www-data /run/uwsgi/
+    chown www-data.www-data /run/uwsgi/ && \
+    cp /opt/lightbo.lt/container/lightbo.lt-app/uwsgi-logrotate /etc/logrotate.d/uwsgi
 #Change the working directory
 WORKDIR /opt/lightbo.lt/server
 #Run uwsgi with the configuration in the .ini file
