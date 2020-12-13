@@ -7,7 +7,9 @@ RUN cd /opt && \
     /opt/lightbo.lt/container/lightbo.lt-base/create_files.sh && \
     chown -R www-data.www-data /opt/lightbo.lt && \
     mkdir -p /var/log/uwsgi/ && \
-    mkdir -p /run/uwsgi/
+    mkdir -p /run/uwsgi/ && \
+    chown www-data.www-data /var/log/uwsgi/ && \
+    chown www-data.www-data /run/uwsgi/
 #Change the working directory
 WORKDIR /opt/lightbo.lt/server
 #Run uwsgi with the configuration in the .ini file
