@@ -16,7 +16,8 @@ CMD [ "uwsgi", "--http", "0.0.0.0:3000", \
                "--uid", "www-data", \
                "--gid", "www-data", \
                "--protocol", "uwsgi", \
-               "--wsgi", "wsgi:application" ]
+               "--wsgi", "wsgi:application", \
+               "--ini", "/opt/lightbo.lt/uwsgi/sites/app.ini" ]
 
 #Expose port 90 of the container to the outside
 EXPOSE 3000
