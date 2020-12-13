@@ -2,9 +2,9 @@ version: '3'
 
 services:
 
-  lightbo.lt-base:
-    image: lightbo.lt-base:latest
-    container_name: lihtbo.lt-base
+  lightbo.lt-app:
+    image: linoxbe/lightbo.lt-app:latest
+    container_name: lihtbo.lt-app
     ports:
       - 13000:3000
     networks:
@@ -13,7 +13,7 @@ services:
       - lightbo.lt-db
 
   lightbo.lt-db:
-    image: lightbo.lt-db:latest
+    image: linoxbe/lightbo.lt-db:latest
     container_name: lightbo.lt-db
     restart: always
     ports:
