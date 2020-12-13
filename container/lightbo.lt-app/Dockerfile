@@ -6,7 +6,7 @@ RUN cd /opt && \
     chmod a+x /opt/lightbo.lt/container/lightbo.lt-base/create_files.sh && \
     /opt/lightbo.lt/container/lightbo.lt-base/create_files.sh && \
     chown -R www-data.www-data /opt/lightbo.lt && \
-    mkdir -p /var/log/uwsgi/ &&
+    mkdir -p /var/log/uwsgi/ && \
     mkdir -p /run/uwsgi/
 #Change the working directory
 WORKDIR /opt/lightbo.lt/server
