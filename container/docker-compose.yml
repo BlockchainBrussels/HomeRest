@@ -4,7 +4,7 @@ services:
 
   lightbo.lt-app:
     image: linoxbe/lightbo.lt-app:latest
-    container_name: lihtbo.lt-app
+    container_name: lightbo.lt-app
     ports:
       - 3000:3000
     networks:
