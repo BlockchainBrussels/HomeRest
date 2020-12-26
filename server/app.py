@@ -43,12 +43,19 @@ basic_auth = BasicAuth(app)
 #################
 
 # check if rfid is inside the rfidAlledList
-def checkRfid(list1, val): 
+def checkRfid(rfid): 
       
     #print(val,list1)
-    if val in list1: 
-            return True 
-    return False
+
+    cursor = mysql.get_db().cursor()
+    sql = "SELECT * FROM configuration WHERE variable ='rfid' AND value LIKE '%s'"
+    val = (rfid)
+    cursor.execute(sql,val)
+    output = cursor.fetchall()
+
+    if cursor.rowcount = 0:
+            return False 
+    return True
 
 def insertEvent(_device, _event, _date, _status):
 
@@ -107,7 +114,7 @@ def action(action,device,rfid):
 
     global alarmStatus
     
-    if(checkRfid(settings_gitignore.rfidAllowedList, rfid)): 
+    if(checkRfid(rfid)): 
         #print("RFID: OK!")
         if action == "home":
             alarmStatus = "Home"
