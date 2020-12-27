@@ -3,7 +3,7 @@ from flask import Flask, request, render_template
 from flaskext.mysql import MySQL
 from flask_basicauth import BasicAuth
 from datetime import datetime
-import settings_gitignore
+#import settings_gitignore
 import os.path
 
 app = Flask(__name__)
@@ -18,18 +18,17 @@ app = Flask(__name__)
 alarmStatus = "Home"
 
 mysql = MySQL() 
-app.config['MYSQL_DATABASE_PASSWORD'] = settings_gitignore.MYSQL_DATABASE_PASSWORD
 app.config['MYSQL_DATABASE_DB'] = 'homerest'
 if os.path.isfile('/.dockerenv'):
     print ("Running in container!")
     app.config['MYSQL_DATABASE_HOST'] = 'lightbo.lt-db'
-    #app.config['MYSQL_DATABASE_PORT'] = 13306
     app.config['MYSQL_DATABASE_USER'] = 'homereset'
     app.config['MYSQL_DATABASE_PASSWORD'] = 'quertyhomerest'
 else: # Not running in container
     print ("NOT running in container!")
     app.config['MYSQL_DATABASE_HOST'] = 'localhost'
     app.config['MYSQL_DATABASE_USER'] = 'homereset'
+    app.config['MYSQL_DATABASE_PASSWORD'] = 'ijdcIHQC8372ihc'
 mysql.init_app(app)
 conn = mysql.connect()
 
@@ -44,16 +43,15 @@ basic_auth = BasicAuth(app)
 
 # check if rfid is inside the rfidAlledList
 def checkRfid(rfid): 
-      
-    #print(val,list1)
 
     cursor = mysql.get_db().cursor()
     sql = "SELECT * FROM configuration WHERE variable ='rfid' AND value LIKE '%s'"
     val = (rfid)
     cursor.execute(sql,val)
-    output = cursor.fetchall()
+    cursor.fetchall()
 
-    if cursor.rowcount = 0:
+    print("cursor.rowcount: ",cursor.rowcount)
+    if cursor.rowcount == 0:
             return False 
     return True
 
