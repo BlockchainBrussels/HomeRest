@@ -3,18 +3,16 @@ FROM linoxbe/lightbo.lt-base:latest
 RUN cd /opt && \
     git clone https://github.com/BlockchainBrussels/LIGHTBO.LT.git && \
     mv /opt/LIGHTBO.LT /opt/lightbo.lt && \
-    chmod a+x /opt/lightbo.lt/container/lightbo.lt-base/create_files.sh && \
-    /opt/lightbo.lt/container/lightbo.lt-base/create_files.sh && \
     chown -R www-data.www-data /opt/lightbo.lt && \
     mkdir -p /var/log/uwsgi/ && \
     mkdir -p /run/uwsgi/ && \
     chown www-data.www-data /var/log/uwsgi/ && \
     chown www-data.www-data /run/uwsgi/ && \
-    cp /opt/lightbo.lt/container/lightbo.lt-app/uwsgi-logrotate /etc/logrotate.d/uwsgi
+    cp /opt/lightbo.lt/container/lightbo.lt-app/uwsgi-logrotate /etc/logrotate.d/uwsgi && \
+    touch /tmp/aha1
 #Change the working directory
 WORKDIR /opt/lightbo.lt/server
 #Run uwsgi with the configuration in the .ini file
-#CMD /usr/local/bin/uwsgi --emperor /opt/lightbo.lt/uwsgi/sites/ --uid=www-data --gid=www-data
 CMD [ "uwsgi", "--http", "0.0.0.0:3000", \
                "--uid", "www-data", \
                "--gid", "www-data", \
