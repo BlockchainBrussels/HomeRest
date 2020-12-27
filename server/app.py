@@ -46,7 +46,7 @@ def checkRfid(rfid):
 
     cursor = mysql.get_db().cursor()
     sql = "SELECT * FROM configuration WHERE variable ='rfid' AND value LIKE %s"
-    val = (rfid)
+    val = ('%'+rfid+'%')
     cursor.execute(sql,val)
     cursor.fetchall()
 
