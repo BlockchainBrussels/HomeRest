@@ -45,7 +45,7 @@ basic_auth = BasicAuth(app)
 def checkRfid(rfid): 
 
     cursor = mysql.get_db().cursor()
-    sql = "SELECT * FROM configuration WHERE variable ='rfid' AND value LIKE '%s'"
+    sql = "SELECT * FROM configuration WHERE variable ='rfid' AND value LIKE %s"
     val = (rfid)
     cursor.execute(sql,val)
     cursor.fetchall()
