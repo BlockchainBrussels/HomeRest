@@ -9,17 +9,11 @@ RUN cd /opt && \
     chown www-data.www-data /var/log/uwsgi/ && \
     chown www-data.www-data /run/uwsgi/ && \
     cp /opt/lightbo.lt/container/lightbo.lt-app/uwsgi-logrotate /etc/logrotate.d/uwsgi && \
-    touch /tmp/aha5
+    touch /tmp/aha6
 #Change the working directory
 WORKDIR /opt/lightbo.lt/server
 #Run uwsgi with the configuration in the .ini file
-CMD [ "uwsgi", "--http", "0.0.0.0:3000", \
-               "--uid", "www-data", \
-               "--gid", "www-data", \
-               "--protocol", "uwsgi", \
-               "--wsgi", "wsgi:application", \
-               "--logger", "file:/var/log/uwsgi/error.log", \
-               "--enable-threads", "true" ]
+CMD [ "uwsgi", "/opt/lightbo.lt/uwsgi/sites/app.ini" ]
 
 #Expose port 90 of the container to the outside
 EXPOSE 3000
