@@ -18,7 +18,8 @@ CMD [ "uwsgi", "--http", "0.0.0.0:3000", \
                "--gid", "www-data", \
                "--protocol", "uwsgi", \
                "--wsgi", "wsgi:application", \
-               "--logger", "file:/var/log/uwsgi/error.log" ]
+               "--logger", "file:/var/log/uwsgi/error.log", \
+               "--enable-threads", "true" ]
 
 #Expose port 90 of the container to the outside
 EXPOSE 3000
