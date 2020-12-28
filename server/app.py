@@ -3,8 +3,9 @@ from flask import Flask, request, render_template
 from flaskext.mysql import MySQL
 from flask_basicauth import BasicAuth
 from datetime import datetime
-#import settings_gitignore
 import os.path
+import time
+import atexit
 
 app = Flask(__name__)
 
@@ -35,6 +36,23 @@ conn = mysql.connect()
 app.config['BASIC_AUTH_USERNAME'] = ''
 app.config['BASIC_AUTH_PASSWORD'] = 'blahblahrfidkey'
 basic_auth = BasicAuth(app)
+
+
+#################
+### schedulers ###
+#################
+
+from apscheduler.schedulers.background import BackgroundScheduler
+
+def print_date_time():
+    print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(func=print_date_time, trigger="interval", seconds=3)
+scheduler.start()
+
+# Shut down the scheduler when exiting the app
+atexit.register(lambda: scheduler.shutdown())
 
 
 #################
