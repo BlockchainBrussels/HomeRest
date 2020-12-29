@@ -9,11 +9,12 @@ RUN cd /opt && \
     chown www-data.www-data /var/log/uwsgi/ && \
     chown www-data.www-data /run/uwsgi/ && \
     cp /opt/lightbo.lt/container/lightbo.lt-app/uwsgi-logrotate /etc/logrotate.d/uwsgi && \
+    cp /opt/lightbo.lt/nginx/default /etc/nginx/sites-available/ && \
     touch /tmp/aha8
 #Change the working directory
 WORKDIR /opt/lightbo.lt/server
 #Run uwsgi with the configuration in the .ini file
-CMD [ "uwsgi", "/opt/lightbo.lt/uwsgi/sites/app.ini" ]
+CMD  /usr/bin/supervisord --configuration=/opt/lightbo.lt/supervisor/supervisord.conf
 
 #Expose port 90 of the container to the outside
 EXPOSE 3000
