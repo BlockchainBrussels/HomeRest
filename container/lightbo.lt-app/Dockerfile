@@ -8,8 +8,9 @@ RUN cd /opt && \
     mkdir -p /run/uwsgi/ && \
     chown www-data.www-data /var/log/uwsgi/ && \
     chown www-data.www-data /run/uwsgi/ && \
-    cp /opt/lightbo.lt/container/lightbo.lt-app/uwsgi-logrotate /etc/logrotate.d/uwsgi && \
     cp /opt/lightbo.lt/nginx/default /etc/nginx/sites-available/ && \
+    mkdir -p /var/log/supervisor/ && \
+    chown www-data.www-data /var/log/supervisor/ && \
     touch /tmp/aha9
 #Change the working directory
 WORKDIR /opt/lightbo.lt/server
