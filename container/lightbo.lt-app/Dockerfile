@@ -10,7 +10,7 @@ RUN cd /opt && \
     chown www-data.www-data /run/uwsgi/ && \
     cp /opt/lightbo.lt/container/lightbo.lt-app/uwsgi-logrotate /etc/logrotate.d/uwsgi && \
     cp /opt/lightbo.lt/nginx/default /etc/nginx/sites-available/ && \
-    touch /tmp/aha8
+    touch /tmp/aha9
 #Change the working directory
 WORKDIR /opt/lightbo.lt/server
 #Run uwsgi with the configuration in the .ini file
