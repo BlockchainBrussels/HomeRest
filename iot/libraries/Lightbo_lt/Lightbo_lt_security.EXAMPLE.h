@@ -13,5 +13,6 @@ const char* linkEvent = "http://10.0.0.1:3000/event";
 const char* linkPing  = "http://10.0.0.1:3000/ping";
 const char* linkAction = "http://10.0.0.1:3000/action";
 const char* linkStatus = "http://10.0.0.1:3000/status";
+const char* linkIntrusion = "http://10.0.0.1:3000/intrusion";
 
 #endif

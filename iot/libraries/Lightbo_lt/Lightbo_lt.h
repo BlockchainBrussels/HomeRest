@@ -21,6 +21,8 @@ class Lightbo_lt
     void ping();
     int rfid(const char* rfid);
     int getStatus();
+    int intrusion();
+
   private:
     const char* _serverUrlEvent;
     const char* _serverUrlPingTemp;
