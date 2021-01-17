@@ -28,7 +28,7 @@ void setup()
 }
 
 void loop(void) {
-  delay(700);
+  delay(1300);
   handleRFID();
 
   // Status (http response code): 201==armed, 200=disarmed
