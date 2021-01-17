@@ -42,13 +42,17 @@ basic_auth = BasicAuth(app)
 ### schedulers ###
 #################
 
+# SELECT to find events 
+#
+#  select * from events where date > date_sub(now(), interval 10 second) AND status="Away";
+
 from apscheduler.schedulers.background import BackgroundScheduler
 
-def print_date_time():
+def intrusion_detection():
     print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(func=print_date_time, trigger="interval", seconds=3)
+scheduler.add_job(func=intrusion_detection, trigger="interval", seconds=1)
 scheduler.start()
 
 # Shut down the scheduler when exiting the app
@@ -61,6 +65,7 @@ atexit.register(lambda: scheduler.shutdown())
 
 # check if rfid is inside the rfidAlledList
 def checkRfid(rfid): 
+    # Check if the given RFID token is in the database as approved token, or not
 
     cursor = mysql.get_db().cursor()
     sql = "SELECT * FROM configuration WHERE variable ='rfid' AND value LIKE %s"
@@ -74,6 +79,7 @@ def checkRfid(rfid):
     return True
 
 def insertEvent(_device, _event, _date, _status):
+    # Add to the database what happens with a lightbo.lt sensor
 
     cursor = mysql.get_db().cursor()
     sql = "INSERT INTO events (device, event, date, status) VALUES (%s, %s, %s, %s)"
@@ -84,6 +90,7 @@ def insertEvent(_device, _event, _date, _status):
     return format(cursor.rowcount)
 
 def insertPing(_device, _date, _status):
+    # Devices Ping every X seconds, saying "hey, I'm still alive, not broken (on purpose), etc"
 
     cursor = mysql.get_db().cursor()
     sql = "INSERT INTO ping (device, date, status) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE device=%s, date=%s, status=%s"
@@ -93,6 +100,14 @@ def insertPing(_device, _date, _status):
 
     return format(cursor.rowcount)
 
+def intrusionDelay():
+    # When intrusionDelay == True, there shoul dbe no intrusionDetected activated
+    # Happens when you've put the alarm in Upstairs or Away, but don't want to detect yourself of course
+    
+    intrusionDelay = True
+    time.sleep(10)
+    intrusionDelay = False
+    return True
 
 ###############
 ### routing ###
@@ -129,29 +144,39 @@ def action(action,device,rfid):
     # action == switch == (home<->away)
 
     global alarmStatus
-    
+    global intrusionDetected
+    global intrusionDelay
+
+    _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    insertEvent(device, action, _date, alarmStatus)
+    print("status: ",action.strip(),"; alarmStatus: ",alarmStatus,"; device: ",device,"; rfid: ",rfid)
+
+    # IF RFID check confirms good RFID token, do the action
+    #    Also start the intrusionDetection process
+    # IF bad RFID token, exit
+
     if(checkRfid(rfid)): 
         #print("RFID: OK!")
+        intrusionDetected = False
+
         if action == "home":
             alarmStatus = "Home"
         elif action == "upstairs":
             alarmStatus = "Upstairs"
+            threading.Thread(target=intrusionDelay)
         elif action == "away":
             alarmStatus = "Away"
+            threading.Thread(target=intrusionDelay)
         elif action == "switch":
             if alarmStatus == "Home":
                 alarmStatus = "Away"
+                threading.Thread(target=intrusionDelay)
             else:
                 alarmStatus = "Home"
 
     else: 
         print("RFID ",rfid,": NOT allowed")
         return {'message': "NotAllowed"}, 403
-    
-    _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    insertEvent(device, action, _date, alarmStatus)
-
-    print("status: ",action.strip(),"; alarmStatus: ",alarmStatus,"; device: ",device,"; rfid: ",rfid)
 
     return alarmStatus, 201
 
@@ -165,9 +190,22 @@ def event():
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     output = "{} record inserted.".format(insertEvent(content['device'], content['event'], _date, alarmStatus))
 
+    if alarmStatus != "Home" and intrusionDelay == False:
+        intrusionDetected = True
+    else:
+        intrusionDetected = False
+
     print(output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'])
     return  output, 201
 
+
+@app.route('/intrusion', methods=['GET'])
+def intrusion():
+
+    if intrusionDetected == False:
+        return intrusionDetected, 200
+    else:
+        return intrusionDetected, 201
 
 ############
 ### main ###
@@ -175,3 +213,4 @@ def event():
 
 if __name__ == '__main__':
     app.run(debug=True,host='0.0.0.0', port=5000)
+

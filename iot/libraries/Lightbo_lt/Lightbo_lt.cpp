@@ -79,3 +79,13 @@ int Lightbo_lt::getStatus()
     httpStatus.end();
     return httpCode;
 }
+
+int Lightbo_lt::intrusion()
+{
+    HTTPClient httpIntrusion;
+    httpIntrusion.begin(linkIntrusion);
+    int httpCode = httpIntrusion.GET();
+    httpIntrusion.end();
+    return httpCode;
+}
+
