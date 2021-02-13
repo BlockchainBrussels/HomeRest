@@ -153,7 +153,7 @@ def action(action,device,rfid):
 
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     insertEvent(device, action, _date, alarmStatus)
-    print("status: ",action.strip(),"; alarmStatus: ",alarmStatus,"; device: ",device,"; rfid: ",rfid)
+    print("status: ",action.strip(),"; alarmStatus: ",alarmStatus,"; device: ",device,"; rfid: ",rfid,"; intrusionDetected: ",intrusionDetected)
 
     # IF RFID check confirms good RFID token, do the action
     #    Also start the intrusionDetection process
