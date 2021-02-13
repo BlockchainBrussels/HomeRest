@@ -18,6 +18,7 @@ app = Flask(__name__)
 #    default should be "Away", as it's the safest one in case of a reboot/restart
 #
 alarmStatus = "Home"
+intrusionDetected = False
 
 mysql = MySQL() 
 app.config['MYSQL_DATABASE_DB'] = 'homerest'
