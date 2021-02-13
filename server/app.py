@@ -42,21 +42,24 @@ basic_auth = BasicAuth(app)
 ### schedulers ###
 #################
 
-# SELECT to find events 
+#
+# INTRUSION BASED ON /event AND /intrusion, NO SCHEDULER NEEDED FOR INTRUSION
+#
+# # SELECT to find events 
 #
 #  select * from events where date > date_sub(now(), interval 10 second) AND status="Away";
-
-from apscheduler.schedulers.background import BackgroundScheduler
-
-def intrusion_detection():
-    print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=intrusion_detection, trigger="interval", seconds=1)
-scheduler.start()
-
-# Shut down the scheduler when exiting the app
-atexit.register(lambda: scheduler.shutdown())
+#
+#from apscheduler.schedulers.background import BackgroundScheduler
+#
+#def intrusion_detection():
+#    print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+#
+#scheduler = BackgroundScheduler()
+#scheduler.add_job(func=intrusion_detection, trigger="interval", seconds=1)
+#scheduler.start()
+#
+## Shut down the scheduler when exiting the app
+#atexit.register(lambda: scheduler.shutdown())
 
 
 #################
