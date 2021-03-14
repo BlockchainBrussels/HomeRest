@@ -17,5 +17,5 @@ WORKDIR /opt/lightbo.lt/server
 #Run uwsgi with the configuration in the .ini file
 CMD  /usr/bin/supervisord --configuration=/opt/lightbo.lt/supervisor/supervisord.conf
 
-#Expose port 90 of the container to the outside
+#Expose port 3000 of the container to the outside
 EXPOSE 3000

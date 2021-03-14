@@ -19,6 +19,7 @@ app = Flask(__name__)
 #
 alarmStatus = "Home"
 intrusionDetected = False
+intrusionDelay = False
 
 mysql = MySQL() 
 app.config['MYSQL_DATABASE_DB'] = 'homerest'
@@ -40,16 +41,12 @@ app.config['BASIC_AUTH_PASSWORD'] = 'blahblahrfidkey'
 basic_auth = BasicAuth(app)
 
 
-#################
+##################
 ### schedulers ###
-#################
+##################
 
 #
-# INTRUSION BASED ON /event AND /intrusion, NO SCHEDULER NEEDED FOR INTRUSION
-#
-# # SELECT to find events 
-#
-#  select * from events where date > date_sub(now(), interval 10 second) AND status="Away";
+### INTRUSION BASED ON /event AND /intrusion, NO SCHEDULER NEEDED FOR INTRUSION
 #
 #from apscheduler.schedulers.background import BackgroundScheduler
 #
