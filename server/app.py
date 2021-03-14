@@ -19,7 +19,7 @@ app = Flask(__name__)
 #
 alarmStatus = "Home"
 intrusionDetected = False
-intrusionDelay = False
+intrusionDelayOngoing = False
 
 mysql = MySQL() 
 app.config['MYSQL_DATABASE_DB'] = 'homerest'
@@ -103,12 +103,18 @@ def insertPing(_device, _date, _status):
     return format(cursor.rowcount)
 
 def intrusionDelay():
-    # When intrusionDelay == True, there shoul dbe no intrusionDetected activated
+    # When intrusionDelayOngonig == True, there shoul dbe no intrusionDetected activated
     # Happens when you've put the alarm in Upstairs or Away, but don't want to detect yourself of course
     
-    intrusionDelay = True
+    global intrusionDelayOngoing
+
+    print("intrusionDelay Start - intrusionDelayOngoing:",intrusionDelayOngoing)
+    intrusionDelayOngoing = True
+    #print(" => Ongoing intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
     time.sleep(10)
-    intrusionDelay = False
+    intrusionDelayOngoing = False
+    #print(" => intrusionDelay End - intrusionDelayOngoing:",intrusionDelayOngoing)
+
     return True
 
 ###############
@@ -147,7 +153,6 @@ def action(action,device,rfid):
 
     global alarmStatus
     global intrusionDetected
-    global intrusionDelay
 
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     insertEvent(device, action, _date, alarmStatus)
@@ -160,22 +165,25 @@ def action(action,device,rfid):
     if(checkRfid(rfid)): 
         #print("RFID: OK!")
         intrusionDetected = False
+        threadIntrusionDelay = threading.Thread(target=intrusionDelay)
 
         if action == "home":
             alarmStatus = "Home"
         elif action == "upstairs":
             alarmStatus = "Upstairs"
-            threading.Thread(target=intrusionDelay)
+            threadIntrusionDelay.start()
         elif action == "away":
             alarmStatus = "Away"
-            threading.Thread(target=intrusionDelay)
+            threadIntrusionDelay.start()
         elif action == "switch":
             if alarmStatus == "Home":
                 alarmStatus = "Away"
-                threading.Thread(target=intrusionDelay)
+                threadIntrusionDelay.start()
             else:
                 alarmStatus = "Home"
 
+        print(" => alarmStatus: ",alarmStatus,"; device: ",device,"; intrusionDetected: ",intrusionDetected)
+        
     else: 
         print("RFID ",rfid,": NOT allowed")
         return {'message': "NotAllowed"}, 403
@@ -186,28 +194,32 @@ def action(action,device,rfid):
 @app.route('/event', methods=['POST'])
 def event():
 
-    #print("request.is_json: ",request.is_json)
+    global intrusionDetected
+
     content = request.get_json()
 
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     output = "{} record inserted.".format(insertEvent(content['device'], content['event'], _date, alarmStatus))
 
-    if alarmStatus != "Home" and intrusionDelay == False:
+    if alarmStatus != "Home" and intrusionDelayOngoing == False:
         intrusionDetected = True
     else:
         intrusionDetected = False
 
-    print(output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'])
+    print('event - output:',output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'],'; intrusionDetected:',intrusionDetected,'(intrusionDelayOngoing:',intrusionDelayOngoing,')')
     return  output, 201
 
 
 @app.route('/intrusion', methods=['GET'])
 def intrusion():
 
+    global intrusionDetected
+
     if intrusionDetected == False:
-        return intrusionDetected, 200
+        return "False", 200
     else:
-        return intrusionDetected, 201
+        print('intrusion - intrusionDetected:',intrusionDetected)
+        return "True", 201
 
 ############
 ### main ###

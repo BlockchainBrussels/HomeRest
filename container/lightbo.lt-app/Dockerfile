@@ -10,8 +10,7 @@ RUN cd /opt && \
     chown www-data.www-data /run/uwsgi/ && \
     cp /opt/lightbo.lt/nginx/default /etc/nginx/sites-available/ && \
     mkdir -p /var/log/supervisor/ && \
-    chown www-data.www-data /var/log/supervisor/ && \
-    touch /tmp/aha16
+    chown www-data.www-data /var/log/supervisor/ 
 #Change the working directory
 WORKDIR /opt/lightbo.lt/server
 #Run uwsgi with the configuration in the .ini file
