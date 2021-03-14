@@ -106,6 +106,7 @@ def intrusionDelay():
     # When intrusionDelayOngonig == True, there shoul dbe no intrusionDetected activated
     # Happens when you've put the alarm in Upstairs or Away, but don't want to detect yourself of course
     
+    global intrusionDelayOngoing
     print("Start intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
     intrusionDelayOngoing = True
     print(" => Ongoing intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
@@ -151,7 +152,6 @@ def action(action,device,rfid):
 
     global alarmStatus
     global intrusionDetected
-    global intrusionDelayOngoing
 
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     insertEvent(device, action, _date, alarmStatus)
