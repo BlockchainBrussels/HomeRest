@@ -210,6 +210,7 @@ def event():
 @app.route('/intrusion', methods=['GET'])
 def intrusion():
 
+    print('intrusion - intrusionDetected:',intrusionDetected)
     if intrusionDetected == False:
         return "False", 200
     else:
