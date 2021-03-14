@@ -108,12 +108,12 @@ def intrusionDelay():
     
     global intrusionDelayOngoing
 
-    print("Start intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
+    print("intrusionDelay Start - intrusionDelayOngoing:",intrusionDelayOngoing)
     intrusionDelayOngoing = True
-    print(" => Ongoing intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
+    #print(" => Ongoing intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
     time.sleep(10)
     intrusionDelayOngoing = False
-    print("End intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
+    #print(" => intrusionDelay End - intrusionDelayOngoing:",intrusionDelayOngoing)
 
     return True
 
