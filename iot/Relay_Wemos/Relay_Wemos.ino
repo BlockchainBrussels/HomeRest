@@ -15,8 +15,10 @@ void setup()
   lightbolt.wifiConnect();
 
   pinMode(D1, OUTPUT);
-  pinMode(2,OUTPUT); // Init LED
-  digitalWrite(2,HIGH); // LED OFF
+  pinMode(2, OUTPUT); // Init LED
+  
+  digitalWrite(2, HIGH); // LED OFF
+  digitalWrite(D1, LOW); // activate relay
 }
 
 void loop(void) {
@@ -32,10 +34,10 @@ void loop(void) {
   // intrusionDetected == False, then httpCode == 200
   // intrusionDetected == True,  then httpCode == 201
   if (lightbolt.intrusion() == 201){
-      digitalWrite(2,LOW); // LED ON
+      digitalWrite(2, LOW); // LED ON
       digitalWrite(D1, LOW); // activate relay
   }else{
-      digitalWrite(2,HIGH); // LED OFF
+      digitalWrite(2, HIGH); // LED OFF
       digitalWrite(D1, LOW); // activate relay
   }
 
