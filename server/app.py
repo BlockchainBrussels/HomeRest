@@ -6,6 +6,7 @@ from datetime import datetime
 import os.path
 import time
 import atexit
+import threading
 
 app = Flask(__name__)
 
@@ -17,6 +18,8 @@ app = Flask(__name__)
 #    default should be "Away", as it's the safest one in case of a reboot/restart
 #
 alarmStatus = "Home"
+intrusionDetected = False
+intrusionDelay = False
 
 mysql = MySQL() 
 app.config['MYSQL_DATABASE_DB'] = 'homerest'
@@ -38,25 +41,24 @@ app.config['BASIC_AUTH_PASSWORD'] = 'blahblahrfidkey'
 basic_auth = BasicAuth(app)
 
 
-#################
+##################
 ### schedulers ###
-#################
+##################
 
-# SELECT to find events 
 #
-#  select * from events where date > date_sub(now(), interval 10 second) AND status="Away";
-
-from apscheduler.schedulers.background import BackgroundScheduler
-
-def intrusion_detection():
-    print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(func=intrusion_detection, trigger="interval", seconds=1)
-scheduler.start()
-
-# Shut down the scheduler when exiting the app
-atexit.register(lambda: scheduler.shutdown())
+### INTRUSION BASED ON /event AND /intrusion, NO SCHEDULER NEEDED FOR INTRUSION
+#
+#from apscheduler.schedulers.background import BackgroundScheduler
+#
+#def intrusion_detection():
+#    print(time.strftime("%A, %d. %B %Y %I:%M:%S %p"))
+#
+#scheduler = BackgroundScheduler()
+#scheduler.add_job(func=intrusion_detection, trigger="interval", seconds=1)
+#scheduler.start()
+#
+## Shut down the scheduler when exiting the app
+#atexit.register(lambda: scheduler.shutdown())
 
 
 #################
@@ -149,7 +151,7 @@ def action(action,device,rfid):
 
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     insertEvent(device, action, _date, alarmStatus)
-    print("status: ",action.strip(),"; alarmStatus: ",alarmStatus,"; device: ",device,"; rfid: ",rfid)
+    print("status: ",action.strip(),"; alarmStatus: ",alarmStatus,"; device: ",device,"; rfid: ",rfid,"; intrusionDetected: ",intrusionDetected)
 
     # IF RFID check confirms good RFID token, do the action
     #    Also start the intrusionDetection process
