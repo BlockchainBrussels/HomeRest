@@ -205,9 +205,9 @@ def event():
 def intrusion():
 
     if intrusionDetected == False:
-        return intrusionDetected, 200
+        return "False", 200
     else:
-        return intrusionDetected, 201
+        return "True", 201
 
 ############
 ### main ###
