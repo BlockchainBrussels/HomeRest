@@ -215,10 +215,10 @@ def intrusion():
 
     global intrusionDetected
 
-    print('intrusion - intrusionDetected:',intrusionDetected)
     if intrusionDetected == False:
         return "False", 200
     else:
+        print('intrusion - intrusionDetected:',intrusionDetected)
         return "True", 201
 
 ############
