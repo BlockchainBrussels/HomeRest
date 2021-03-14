@@ -199,7 +199,7 @@ def event():
     else:
         intrusionDetected = False
 
-    print(output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'])
+    print(output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'],'; intrusionDetected:',intrusionDetected)
     return  output, 201
 
 
