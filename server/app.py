@@ -176,6 +176,8 @@ def action(action,device,rfid):
             else:
                 alarmStatus = "Home"
 
+        print(" => alarmStatus: ",alarmStatus,"; device: ",device,"; intrusionDetected: ",intrusionDetected)
+        
     else: 
         print("RFID ",rfid,": NOT allowed")
         return {'message': "NotAllowed"}, 403
