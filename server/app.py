@@ -107,6 +107,7 @@ def intrusionDelay():
     # Happens when you've put the alarm in Upstairs or Away, but don't want to detect yourself of course
     
     global intrusionDelayOngoing
+
     print("Start intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
     intrusionDelayOngoing = True
     print(" => Ongoing intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
@@ -164,19 +165,20 @@ def action(action,device,rfid):
     if(checkRfid(rfid)): 
         #print("RFID: OK!")
         intrusionDetected = False
+        threadIntrusionDelay = threading.Thread(target=intrusionDelay)
 
         if action == "home":
             alarmStatus = "Home"
         elif action == "upstairs":
             alarmStatus = "Upstairs"
-            threading.Thread(target=intrusionDelay)
+            threadIntrusionDelay.start()
         elif action == "away":
             alarmStatus = "Away"
-            threading.Thread(target=intrusionDelay)
+            threadIntrusionDelay.start()
         elif action == "switch":
             if alarmStatus == "Home":
                 alarmStatus = "Away"
-                threading.Thread(target=intrusionDelay)
+                threadIntrusionDelay.start()
             else:
                 alarmStatus = "Home"
 
@@ -192,7 +194,8 @@ def action(action,device,rfid):
 @app.route('/event', methods=['POST'])
 def event():
 
-    #print("request.is_json: ",request.is_json)
+    global intrusionDetected
+
     content = request.get_json()
 
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -203,12 +206,14 @@ def event():
     else:
         intrusionDetected = False
 
-    print(output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'],'; intrusionDetected:',intrusionDetected,'(intrusionDelayOngoing:',intrusionDelayOngoing,')')
+    print('event - output:',output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'],'; intrusionDetected:',intrusionDetected,'(intrusionDelayOngoing:',intrusionDelayOngoing,')')
     return  output, 201
 
 
 @app.route('/intrusion', methods=['GET'])
 def intrusion():
+
+    global intrusionDetected
 
     print('intrusion - intrusionDetected:',intrusionDetected)
     if intrusionDetected == False:
