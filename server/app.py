@@ -19,7 +19,7 @@ app = Flask(__name__)
 #
 alarmStatus = "Home"
 intrusionDetected = False
-intrusionDelay = False
+intrusionDelayOngoing = False
 
 mysql = MySQL() 
 app.config['MYSQL_DATABASE_DB'] = 'homerest'
@@ -103,12 +103,16 @@ def insertPing(_device, _date, _status):
     return format(cursor.rowcount)
 
 def intrusionDelay():
-    # When intrusionDelay == True, there shoul dbe no intrusionDetected activated
+    # When intrusionDelayOngonig == True, there shoul dbe no intrusionDetected activated
     # Happens when you've put the alarm in Upstairs or Away, but don't want to detect yourself of course
     
-    intrusionDelay = True
+    print("Start intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
+    intrusionDelayOngoing = True
+    print(" => Ongoing intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
     time.sleep(10)
-    intrusionDelay = False
+    intrusionDelayOngoing = False
+    print("End intrusionDelay - intrusionDelayOngoing:",intrusionDelayOngoing)
+
     return True
 
 ###############
@@ -147,7 +151,7 @@ def action(action,device,rfid):
 
     global alarmStatus
     global intrusionDetected
-    global intrusionDelay
+    global intrusionDelayOngoing
 
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     insertEvent(device, action, _date, alarmStatus)
@@ -194,12 +198,12 @@ def event():
     _date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     output = "{} record inserted.".format(insertEvent(content['device'], content['event'], _date, alarmStatus))
 
-    if alarmStatus != "Home" and intrusionDelay == False:
+    if alarmStatus != "Home" and intrusionDelayOngoing == False:
         intrusionDetected = True
     else:
         intrusionDetected = False
 
-    print(output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'],'; intrusionDetected:',intrusionDetected)
+    print(output, ' - date: ', _date,'; device: ', content['device'],'; event: ', content['event'],'; intrusionDetected:',intrusionDetected,'(intrusionDelayOngoing:',intrusionDelayOngoing,')')
     return  output, 201
 
 
