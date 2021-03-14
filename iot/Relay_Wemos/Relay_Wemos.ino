@@ -18,7 +18,7 @@ void setup()
   pinMode(2, OUTPUT); // Init LED
   
   digitalWrite(2, HIGH); // LED OFF
-  digitalWrite(D1, LOW); // activate relay
+  digitalWrite(D1, HIGH); // de-activate relay
 }
 
 void loop(void) {
@@ -36,10 +36,12 @@ void loop(void) {
   if (lightbolt.intrusion() == 201){
       digitalWrite(2, LOW); // LED ON
       digitalWrite(D1, LOW); // activate relay
-  }else{
+      delay (300);
       digitalWrite(2, HIGH); // LED OFF
-      digitalWrite(D1, LOW); // activate relay
+      digitalWrite(D1, HIGH); // de-activate relay
+      delay (100);
   }
-
-  delay (1000);
+  else{
+      delay (1000);
+  }
 }
